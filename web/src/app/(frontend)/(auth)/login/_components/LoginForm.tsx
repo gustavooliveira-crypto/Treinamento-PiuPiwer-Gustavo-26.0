@@ -1,14 +1,13 @@
-'use client'
+'use client';
+
 import Link from "next/link";
 import { useState, useEffect } from "react";
-
-import LoginOptionals from "@/components/auth/LoginOptionals";
-
-import RequiredTag from "@/components/base/input/RequiredTag";
-import { authClient } from "@/lib/auth-client";
+import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
 
-import dynamic from 'next/dynamic';
+import LoginOptionals from "@/components/auth/LoginOptionals";
+import RequiredTag from "@/components/base/input/RequiredTag";
+import { authClient } from "@/lib/auth-client";
 
 const GoogleAuthButton = dynamic(() => import('@/components/auth/GoogleLoginButton'));
 const CredentialsButton = dynamic(() => import('@/components/auth/CredentialsButton'));
@@ -35,65 +34,94 @@ function LoginForm() {
       });
 
       if (result.error) {
-        toast.error((result.error?.message || 'Erro desconhecido'))
+        toast.error(result.error?.message || 'Erro ao fazer login');
       }
     } catch (error) {
-      toast.error('Erro: ' + String(error))
+      toast.error('Erro: ' + String(error));
     } finally {
       setLoading(false);
     }
   };
 
-  return ( 
-    <div className="lg:w-[90%] xl:w-[80%]">
-      <h2 className="font-bold text-[40px] text-center leading-12">Continue seu aprendizado</h2>
-      <form className="mt-6" onSubmit={handleSubmit}>
-        <ValidatedInput 
+  return (
+    <div className="w-full">
+
+      <div className="mb-8">
+        <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
+          Entrar na plataforma
+        </h2>
+        <p className="mt-2 text-slate-600">
+          Continue seu treinamento no PiuPiwer.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit}>
+
+        <ValidatedInput
           title="E-mail"
-          placeholder="exemplo@noctiluz.com.br"
+          placeholder="seuemail@exemplo.com"
           name="email"
           type="email"
           value={email}
           setValue={setEmail}
-          labelClassName='auth-label'
-          inputClassName='auth-input'
-          iconContainerClassName="auth-icon"
+          labelClassName="text-sm font-medium text-slate-700 mb-2 block"
+          inputClassName="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white transition"
+          iconContainerClassName="text-slate-400"
           required
-        ><RequiredTag/></ValidatedInput>
-        
-        <ValidatedInput 
+        >
+          <RequiredTag />
+        </ValidatedInput>
+
+        <ValidatedInput
           title="Senha"
           placeholder="Insira sua senha"
           name="password"
           type="password"
           value={password}
           setValue={setPassword}
-
           overrideValidate={(val) => val.length >= 6}
-
           containerClassName="mt-4"
-          labelClassName="auth-label"
-          inputClassName="auth-input"
-          iconContainerClassName="auth-icon"
+          labelClassName="text-sm font-medium text-slate-700 mb-2 block"
+          inputClassName="w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 outline-none focus:border-blue-500 focus:bg-white transition"
+          iconContainerClassName="text-slate-400"
           required
-        ><RequiredTag/></ValidatedInput>
+        >
+          <RequiredTag />
+        </ValidatedInput>
 
-        <LoginOptionals />
+        <div className="mt-4">
+          <LoginOptionals />
+        </div>
 
-        <CredentialsButton className="mt-6" disabled={loading}>Entrar</CredentialsButton>
+        <CredentialsButton
+          className="mt-6 w-full rounded-xl bg-blue-600 py-3 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-60"
+          disabled={loading}
+        >
+          {loading ? 'Entrando...' : 'Entrar'}
+        </CredentialsButton>
+
       </form>
-      
-      <div className="flex items-center gap-4 py-5">
-        <div className="flex-grow h-0.5 bg-gray-400" />
-        <p className="text-gray-400 text-lg">ou</p>
-        <div className="flex-grow h-0.5 bg-gray-400" />
+
+      <div className="flex items-center gap-4 py-6">
+        <div className="flex-grow h-px bg-slate-300" />
+        <p className="text-slate-400 text-sm">ou</p>
+        <div className="flex-grow h-px bg-slate-300" />
       </div>
 
       <GoogleAuthButton disabled={loading} text="Entrar com Google" />
 
-      <Link href='/cadastro' className="block w-fit mt-8 text-sm group">Ainda não tem uma conta? <span className="text-pink-500 colorTransition border-b border-transparent group-hover:border-pink-500">Cadastre-se</span></Link>
+      <Link
+        href="/cadastro"
+        className="block w-fit mt-8 text-sm text-slate-600 group"
+      >
+        Ainda não tem uma conta?{' '}
+        <span className="text-blue-600 border-b border-transparent group-hover:border-blue-600">
+          Cadastre-se
+        </span>
+      </Link>
+
     </div>
-   );
+  );
 }
 
 export default LoginForm;

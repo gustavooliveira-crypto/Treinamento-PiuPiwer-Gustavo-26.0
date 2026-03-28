@@ -8,7 +8,6 @@ const ROUTE_CONFIG = {
   authRequired: [
     "/aprender",
     "/dashboard",
-    "/perfil",
     "/settings",
   ],
   
