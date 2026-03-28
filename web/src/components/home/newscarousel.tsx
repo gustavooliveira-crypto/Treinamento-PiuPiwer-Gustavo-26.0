@@ -17,7 +17,7 @@ const noticias = [
   },
 ];
 
-export default function newscarousel() {
+export default function Newscarousel() {
   const [indice, setIndice] = useState(0);
 
   function voltar() {

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export default function postimput() {
+export default function Postimput() {
   const [texto, setTexto] = useState("");
 
   return (
