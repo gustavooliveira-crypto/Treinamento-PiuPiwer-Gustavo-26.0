@@ -1,7 +1,7 @@
 import Sidebar from "@/components/base/side/sidebar";
 import Newscarousel from "@/components/home/Newscarousel";
-import Postinput from "@/components/home/PostInput";
-import Postcard from "@/components/home/PostCard";
+import PostInput from "@/components/home/PostInput";
+import PostCard from "@/components/home/PostCard";
 
 const posts = [
   {
@@ -37,11 +37,11 @@ export default function HomePage() {
 
           <Newscarousel />
 
-          <Postinput />
+          <PostInput />
 
           <div className="mt-6">
             {posts.map((post, index) => (
-              <Postcard
+              <PostCard
                 key={index}
                 nome={post.nome}
                 usuario={post.usuario}
