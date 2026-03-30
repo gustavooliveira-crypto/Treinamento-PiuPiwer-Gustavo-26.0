@@ -4,16 +4,16 @@ import { useState } from "react";
 
 const noticias = [
   {
-    titulo: "Semana acadêmica começa na próxima segunda",
-    descricao: "Confira a programação completa e os horários das palestras e workshops.",
+    titulo: "Corinthians anuncia contratação de novo atacante",
+    descricao: "Jessie Lingard chega para reforçar o ataque do Timão na próxima temporada.",
   },
   {
     titulo: "Novo laboratório será aberto no prédio da engenharia",
     descricao: "O espaço será voltado para projetos práticos e atividades interdisciplinares.",
   },
   {
-    titulo: "Inscrições abertas para monitorias",
-    descricao: "Os alunos já podem se inscrever para participar do processo seletivo.",
+    titulo: "Corinthians é campeão Mundial de Clubes",
+    descricao: "O Corinthians conquistou o título mundial após vencer o Chelsea na final por 10 a 1.",
   },
 ];
 

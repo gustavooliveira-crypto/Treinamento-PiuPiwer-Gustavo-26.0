@@ -1,5 +1,5 @@
 import Sidebar from "@/components/base/side/sidebar";
-import PostCard from "@/components/home/Postcard";
+import PostCard from "@/components/home/PostCard";
 
 const user = {
   nome: "Gustavo Henrique",
@@ -9,7 +9,7 @@ const user = {
 };
 
 const stats = [
-  { titulo: "Posts", valor: 12 },
+  { titulo: "Posts", valor: 2 },
   { titulo: "Curtidas", valor: 84 },
   { titulo: "Comentários", valor: 27 },
 ];
