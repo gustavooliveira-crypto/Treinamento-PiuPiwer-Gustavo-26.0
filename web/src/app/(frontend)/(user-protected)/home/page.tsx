@@ -11,11 +11,17 @@ const posts = [
     tempo: "há 10 min",
   },
   {
-    nome: "Maria Souza",
-    usuario: "@maria",
-    texto: "Gostei bastante da interface.",
-    tempo: "há 25 min",
+    nome: "Memphis Depay",
+    usuario: "@menphis",
+    texto: "Estou animado para jogar no Corinthians! #VaiCorinthians",
+    tempo: "há 30 min",
   },
+  {
+    nome: "Corinthians Oficial",
+    usuario: "@corinthians",
+    texto: "Vamos, Corinthians! #VaiCorinthians",
+    tempo: "há 1 hora",
+  }
 ];
 
 export default function HomePage() {

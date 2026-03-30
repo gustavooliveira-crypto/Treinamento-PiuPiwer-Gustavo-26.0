@@ -1,27 +1,38 @@
-'use client'
+'use client';
+
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import dynamic from "next/dynamic";
+import { toast } from "react-hot-toast";
 
 import PasswordRequirement from "./PasswordRequirement";
 import RequiredTag from "@/components/base/input/RequiredTag";
-import { hasLowercase, hasMinLength, hasNumber, hasUppercase, validatePassword, validateConfirmPassword } from "@/utils";
-
-import { toast } from "react-hot-toast";
-import { redirect } from "next/navigation";
-import { authClient } from "@/lib/auth-client";
-
-import dynamic from 'next/dynamic';
+import {
+  hasLowercase,
+  hasMinLength,
+  hasNumber,
+  hasUppercase,
+  validatePassword,
+  validateConfirmPassword
+} from "@/utils";
 
 const GoogleAuthButton = dynamic(() => import('@/components/auth/GoogleLoginButton'));
 const CredentialsButton = dynamic(() => import('@/components/auth/CredentialsButton'));
 const ValidatedInput = dynamic(() => import('@/components/base/input/ValidatedInput'));
 
 function CadastroForm() {
+  const router = useRouter();
+
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+
+  useEffect(() => {
+    setLoading(false);
+  }, []);
 
   const handleCredentialsSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,45 +49,62 @@ function CadastroForm() {
         return;
       }
 
-      const result = await authClient.signUp.email({
-        name,
-        email,
-        password,
-        callbackURL: "/",
+      const res = await fetch("/api/remote-auth/sign-up/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          callbackURL: "/home",
+        }),
       });
 
-      if (result.error) {
-        if (result.error.message?.includes('already exists') || result.error.message?.includes('duplicate')) {
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        if (
+          typeof data.error === "string" &&
+          (data.error.includes("already exists") ||
+            data.error.includes("duplicate"))
+        ) {
           toast.error("Este email já está cadastrado");
         } else {
-          toast.error(result.error.message || "Erro inesperado");
+          toast.error(
+            typeof data.error === "string"
+              ? data.error
+              : `Erro no cadastro (${res.status})`
+          );
         }
-      } else {
-        toast.success(`Bem-vindo(a), ${name}!`);
-        
-        setTimeout(() => {
-          redirect('/');
-        }, 1000);
+        return;
       }
-    } catch (error: unknown) {
-      console.error('Signup error:', error);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      toast.error((error as any).message ?? "Erro inesperado");
+
+      toast.success(`Bem-vindo(a), ${name}!`);
+
+      setTimeout(() => {
+        router.push("/home");
+      }, 1000);
+    } catch (error) {
+      console.error("Signup error:", error);
+      toast.error("Não foi possível conectar");
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-
-  return ( 
+  return (
     <div className="flex items-center justify-center">
       <div className="pt-6 mb-12 px-2">
-        <h2 className="font-bold text-[40px] text-center leading-12">Aprenda se divertindo!</h2>
-        <p className="text-gray-500 pt-1 mb-8">Lições, exercícios, simulações e muita interatividade customizados <b>da forma que você preferir</b></p>
-        
+        <h2 className="font-bold text-[40px] text-center leading-12">
+          Aprenda se divertindo!
+        </h2>
+        <p className="text-gray-500 pt-1 mb-8">
+          Lições, exercícios, simulações e muita interatividade customizados{" "}
+          <b>da forma que você preferir</b>
+        </p>
+
         <GoogleAuthButton disabled={loading} text="Cadastro com Google" />
 
         <div className="flex items-center gap-4 py-5">
@@ -85,7 +113,7 @@ function CadastroForm() {
           <div className="flex-grow h-0.5 bg-gray-400" />
         </div>
 
-        <form className="" onSubmit={handleCredentialsSubmit}>
+        <form onSubmit={handleCredentialsSubmit}>
           <div className="flex flex-col gap-4">
             <ValidatedInput
               title="Nome"
@@ -94,11 +122,14 @@ function CadastroForm() {
               type="text"
               value={name}
               setValue={setName}
-              labelClassName='auth-label'
-              inputClassName='auth-input'
+              labelClassName="auth-label"
+              inputClassName="auth-input"
               iconContainerClassName="auth-icon"
               required
-            ><RequiredTag/></ValidatedInput>
+            >
+              <RequiredTag />
+            </ValidatedInput>
+
             <ValidatedInput
               title="E-mail"
               placeholder="exemplo@noctiluz.com.br"
@@ -106,11 +137,14 @@ function CadastroForm() {
               type="email"
               value={email}
               setValue={setEmail}
-              labelClassName='auth-label'
-              inputClassName='auth-input'
+              labelClassName="auth-label"
+              inputClassName="auth-input"
               iconContainerClassName="auth-icon"
               required
-            ><RequiredTag/></ValidatedInput>
+            >
+              <RequiredTag />
+            </ValidatedInput>
+
             <ValidatedInput
               title="Senha"
               placeholder="Insira sua senha"
@@ -123,7 +157,10 @@ function CadastroForm() {
               inputClassName="auth-input"
               iconContainerClassName="auth-icon"
               required
-            ><RequiredTag/></ValidatedInput>
+            >
+              <RequiredTag />
+            </ValidatedInput>
+
             <ValidatedInput
               title="Confirmar Senha"
               placeholder="Confirme sua senha"
@@ -137,35 +174,45 @@ function CadastroForm() {
               inputClassName="auth-input"
               iconContainerClassName="auth-icon"
               required
-            ><RequiredTag/></ValidatedInput>
+            >
+              <RequiredTag />
+            </ValidatedInput>
+
             <p>
               Senha deve ter pelo menos:
-              
-              <PasswordRequirement 
+              <PasswordRequirement
                 text="1 letra maiúscula"
                 validateFunction={() => hasUppercase(password)}
               />
-              <PasswordRequirement 
+              <PasswordRequirement
                 text="1 letra minúscula"
                 validateFunction={() => hasLowercase(password)}
               />
-              <PasswordRequirement 
+              <PasswordRequirement
                 text="1 número"
                 validateFunction={() => hasNumber(password)}
               />
-              <PasswordRequirement 
+              <PasswordRequirement
                 text="8 caracteres"
                 validateFunction={() => hasMinLength(password)}
               />
             </p>
           </div>
-          <CredentialsButton disabled={loading} className="mt-6">Cadastro</CredentialsButton>
+
+          <CredentialsButton disabled={loading} className="mt-6">
+            {loading ? "Cadastrando..." : "Cadastro"}
+          </CredentialsButton>
         </form>
-        
-        <Link href='/login' className="block w-fit mt-8 text-sm group">Já tem uma conta? <span className="text-pink-500 colorTransition border-b border-transparent group-hover:border-pink-500">Login</span></Link>
+
+        <Link href='/login' className="block w-fit mt-8 text-sm group">
+          Já tem uma conta?{" "}
+          <span className="text-pink-500 colorTransition border-b border-transparent group-hover:border-pink-500">
+            Login
+          </span>
+        </Link>
       </div>
     </div>
-   );
+  );
 }
 
 export default CadastroForm;

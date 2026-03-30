@@ -5,7 +5,7 @@ const user = {
   nome: "Gustavo Henrique",
   usuario: "@gustavo",
   curso: "Engenharia da Computação",
-  bio: "Estudante da Poli interessado em tecnologia, front-end e desenvolvimento web.",
+  bio: "Estudante da Poli e Cortinthiano",
 };
 
 const stats = [
@@ -18,13 +18,13 @@ const posts = [
   {
     nome: "Gustavo Henrique",
     usuario: "@gustavo",
-    texto: "Comecei a desenvolver a página de perfil do PiuPiwer.",
+    texto: "Vai Corinthians!",
     tempo: "há 20 min",
   },
   {
     nome: "Gustavo Henrique",
     usuario: "@gustavo",
-    texto: "A sidebar retrátil já está funcionando e agora estou montando o restante das telas.",
+    texto: "O palmeiras não tem mundial",
     tempo: "há 1 h",
   },
 ];

@@ -7,7 +7,6 @@ import toast from "react-hot-toast";
 
 import LoginOptionals from "@/components/auth/LoginOptionals";
 import RequiredTag from "@/components/base/input/RequiredTag";
-import { authClient } from "@/lib/auth-client";
 
 const GoogleAuthButton = dynamic(() => import('@/components/auth/GoogleLoginButton'));
 const CredentialsButton = dynamic(() => import('@/components/auth/CredentialsButton'));
@@ -27,17 +26,34 @@ function LoginForm() {
     setLoading(true);
 
     try {
-      const result = await authClient.signIn.email({
-        email,
-        password,
-        callbackURL: "/",
+      const res = await fetch("/api/remote-auth/sign-in/email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+          callbackURL: "/home",
+        }),
       });
 
-      if (result.error) {
-        toast.error(result.error?.message || 'Erro ao fazer login');
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        toast.error(
+          typeof data.error === "string"
+            ? data.error
+            : `Erro ao fazer login (${res.status})`
+        );
+        return;
       }
+
+      toast.success("Login realizado com sucesso");
+      window.location.href = "/home";
     } catch (error) {
-      toast.error('Erro: ' + String(error));
+      console.error("Erro no login:", error);
+      toast.error("Não foi possível conectar");
     } finally {
       setLoading(false);
     }
@@ -45,18 +61,16 @@ function LoginForm() {
 
   return (
     <div className="w-full">
-
       <div className="mb-8">
         <h2 className="text-3xl sm:text-4xl font-bold text-slate-900">
           Entrar na plataforma
         </h2>
         <p className="mt-2 text-slate-600">
-          Continue seu treinamento no PiuPiwer.
+          Bem-vindo ao PiuPiwer.
         </p>
       </div>
 
       <form onSubmit={handleSubmit}>
-
         <ValidatedInput
           title="E-mail"
           placeholder="seuemail@exemplo.com"
@@ -99,7 +113,6 @@ function LoginForm() {
         >
           {loading ? 'Entrando...' : 'Entrar'}
         </CredentialsButton>
-
       </form>
 
       <div className="flex items-center gap-4 py-6">
@@ -114,12 +127,11 @@ function LoginForm() {
         href="/cadastro"
         className="block w-fit mt-8 text-sm text-slate-600 group"
       >
-        Ainda não tem uma conta?{' '}
+        Ainda não tem uma conta?{" "}
         <span className="text-blue-600 border-b border-transparent group-hover:border-blue-600">
           Cadastre-se
         </span>
       </Link>
-
     </div>
   );
 }
