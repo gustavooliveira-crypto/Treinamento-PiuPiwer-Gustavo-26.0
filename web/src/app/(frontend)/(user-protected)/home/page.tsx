@@ -1,5 +1,5 @@
 import Sidebar from "@/components/base/side/sidebar";
-import Newscarousel from "@/components/home/Newscarousel";
+import NewsCarousel from "@/components/home/NewsCarousel";
 import PostInput from "@/components/home/PostInput";
 import PostCard from "@/components/home/PostCard";
 
