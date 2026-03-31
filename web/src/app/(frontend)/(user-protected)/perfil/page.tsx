@@ -1,5 +1,5 @@
 import Sidebar from "@/components/base/side/sidebar";
-import PostCard from "@/components/home/temp2";
+import PostCard from "@/components/home/PostCard";
 
 const user = {
   nome: "Gustavo Henrique",
