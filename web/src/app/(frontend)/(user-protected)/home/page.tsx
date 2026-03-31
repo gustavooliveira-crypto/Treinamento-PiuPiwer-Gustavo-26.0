@@ -1,7 +1,7 @@
 import Sidebar from "@/components/base/side/sidebar";
-import NewsCarousel from "@/components/home/newscarousel";
+import Newscarousel from "@/components/home/temp";
 import PostInput from "@/components/home/PostInput";
-import PostCard from "@/components/home/postcard";
+import PostCard from "@/components/home/temp2";
 
 const posts = [
   {
