@@ -5,7 +5,7 @@ type PostCardProps = {
   tempo: string;
 };
 
-export default function Postcard({ nome, usuario, texto, tempo }: PostCardProps) {
+export default function PostCard({ nome, usuario, texto, tempo }: PostCardProps) {
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-4 mb-4">
       <div className="flex items-center gap-3 mb-3">
