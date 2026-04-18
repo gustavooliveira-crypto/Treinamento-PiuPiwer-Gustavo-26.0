@@ -13,38 +13,33 @@ import {
 import { router } from "expo-router";
 import { useAuth } from "~/contexts/AuthContext";
 
-export default function LoginScreen() {
-  const { signIn, signInWithGoogle, isLoading: authLoading } = useAuth();
+export default function CadastroScreen() {
+  const { signUp, isLoading: authLoading } = useAuth();
 
+  const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmarSenha, setConfirmarSenha] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = async () => {
-    if (!email || !password) {
+  const handleCadastro = async () => {
+    if (!nome || !email || !password || !confirmarSenha) {
       Alert.alert("Erro", "Preencha todos os campos");
+      return;
+    }
+
+    if (password !== confirmarSenha) {
+      Alert.alert("Erro", "As senhas não coincidem");
       return;
     }
 
     setIsLoading(true);
 
-    const result = await signIn(email, password);
+    const result = await signUp(email, password, nome);
     console.log(result);
 
     if (!result.success) {
-      Alert.alert("Falha no login", result.error || "Ocorreu um erro");
-    }
-
-    setIsLoading(false);
-  };
-
-  const handleGoogleLogin = async () => {
-    setIsLoading(true);
-
-    const result = await signInWithGoogle();
-
-    if (!result.success) {
-      Alert.alert("Falha no login", result.error || "Falha no login com Google");
+      Alert.alert("Falha no cadastro", result.error || "Ocorreu um erro");
     }
 
     setIsLoading(false);
@@ -74,7 +69,6 @@ export default function LoginScreen() {
         }}
         keyboardShouldPersistTaps="handled"
       >
-        {/* topo */}
         <View style={{ alignItems: "center", marginBottom: 36 }}>
           <View
             style={{
@@ -112,7 +106,6 @@ export default function LoginScreen() {
           </Text>
         </View>
 
-        {/* card */}
         <View
           style={{
             backgroundColor: "white",
@@ -130,7 +123,7 @@ export default function LoginScreen() {
               marginBottom: 8,
             }}
           >
-            Bem-vindo
+            Criar conta
           </Text>
 
           <Text
@@ -140,10 +133,9 @@ export default function LoginScreen() {
               marginBottom: 20,
             }}
           >
-            Entre na sua conta para continuar
+            Cadastre-se para começar
           </Text>
 
-          {/* abas falsas */}
           <View
             style={{
               flexDirection: "row",
@@ -153,6 +145,20 @@ export default function LoginScreen() {
               marginBottom: 20,
             }}
           >
+            <TouchableOpacity
+              onPress={() => router.push("/(auth)/login")}
+              style={{
+                flex: 1,
+                paddingVertical: 12,
+                borderRadius: 16,
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ fontWeight: "600", color: "#64748b" }}>
+                Entrar
+              </Text>
+            </TouchableOpacity>
+
             <View
               style={{
                 flex: 1,
@@ -162,23 +168,38 @@ export default function LoginScreen() {
                 alignItems: "center",
               }}
             >
-              <Text style={{ fontWeight: "600", color: "#0f172a" }}>Entrar</Text>
-            </View>
-
-            <TouchableOpacity
-              onPress={() => router.push("/(auth)/cadastro")}
-              style={{
-                flex: 1,
-                paddingVertical: 12,
-                borderRadius: 16,
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ fontWeight: "600", color: "#64748b" }}>
+              <Text style={{ fontWeight: "600", color: "#0f172a" }}>
                 Cadastrar
               </Text>
-            </TouchableOpacity>
+            </View>
           </View>
+
+          <Text
+            style={{
+              fontSize: 15,
+              fontWeight: "600",
+              color: "#0f172a",
+              marginBottom: 8,
+            }}
+          >
+            Nome
+          </Text>
+
+          <TextInput
+            placeholder="Seu nome"
+            placeholderTextColor="#94a3b8"
+            value={nome}
+            onChangeText={setNome}
+            style={{
+              borderWidth: 1,
+              borderColor: "#d1d5db",
+              padding: 15,
+              marginBottom: 16,
+              borderRadius: 16,
+              fontSize: 16,
+              backgroundColor: "white",
+            }}
+          />
 
           <Text
             style={{
@@ -230,6 +251,34 @@ export default function LoginScreen() {
               borderWidth: 1,
               borderColor: "#d1d5db",
               padding: 15,
+              marginBottom: 16,
+              borderRadius: 16,
+              fontSize: 16,
+              backgroundColor: "white",
+            }}
+          />
+
+          <Text
+            style={{
+              fontSize: 15,
+              fontWeight: "600",
+              color: "#0f172a",
+              marginBottom: 8,
+            }}
+          >
+            Confirmar senha
+          </Text>
+
+          <TextInput
+            placeholder="********"
+            placeholderTextColor="#94a3b8"
+            value={confirmarSenha}
+            onChangeText={setConfirmarSenha}
+            secureTextEntry
+            style={{
+              borderWidth: 1,
+              borderColor: "#d1d5db",
+              padding: 15,
               marginBottom: 20,
               borderRadius: 16,
               fontSize: 16,
@@ -238,13 +287,12 @@ export default function LoginScreen() {
           />
 
           <TouchableOpacity
-            onPress={handleLogin}
+            onPress={handleCadastro}
             disabled={isLoading}
             style={{
               backgroundColor: isLoading ? "#93c5fd" : "#2563eb",
               padding: 16,
               borderRadius: 16,
-              marginBottom: 14,
             }}
           >
             {isLoading ? (
@@ -258,50 +306,10 @@ export default function LoginScreen() {
                   fontWeight: "bold",
                 }}
               >
-                Entrar
+                Cadastrar
               </Text>
             )}
           </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={handleGoogleLogin}
-            disabled={isLoading}
-            style={{
-              backgroundColor: isLoading ? "#fca5a5" : "#ef4444",
-              padding: 16,
-              borderRadius: 16,
-            }}
-          >
-            {isLoading ? (
-              <ActivityIndicator color="white" />
-            ) : (
-              <Text
-                style={{
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: 16,
-                  fontWeight: "bold",
-                }}
-              >
-                Entrar com Google
-              </Text>
-            )}
-          </TouchableOpacity>
-
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              marginTop: 18,
-            }}
-          >
-            <Text style={{ color: "#64748b" }}>Não tem uma conta? </Text>
-            <TouchableOpacity onPress={() => router.push("/(auth)/cadastro")}>
-              <Text style={{ color: "#2563eb", fontWeight: "bold" }}>
-                Cadastre-se
-              </Text>
-            </TouchableOpacity>
-          </View>
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
