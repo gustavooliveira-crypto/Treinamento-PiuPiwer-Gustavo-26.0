@@ -32,40 +32,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Check session on app start
   useEffect(() => {
-    checkSession()
+    // Temporarily disabled - start with no session
+    setIsLoading(false);
+    // checkSession()
   }, [])
 
-  // Handle navigation based on auth state
-  useEffect(() => {
-    if (isLoading) return
-
-    const inAuthGroup = segments[0] === '(auth)'
-
-    if (!isAuthenticated && !inAuthGroup) {
-      // User not authenticated, redirect to login
-      router.replace('/(auth)/login')
-    } else if (isAuthenticated && inAuthGroup) {
-      // User authenticated, redirect to main app
-      router.replace('/')
-    }
-  }, [isAuthenticated, segments, isLoading, router])
+  // Navigation is now controlled manually via buttons
 
   const checkSession = async () => {
     try {
-      const result = await authClient.getSession()
+      console.log('Starting session check...');
       
-      if (result?.data?.user) {
-        setUser(result.data.user)
-      } else {
-        setUser(null)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => {
+        controller.abort();
+        console.log('Session check timeout');
+      }, 5000);
+      
+      try {
+        const result = await authClient.getSession();
+        clearTimeout(timeoutId);
+        console.log('Session check result:', result);
+        
+        if (result?.data?.user) {
+          console.log('User found:', result.data.user.email);
+          setUser(result.data.user);
+        } else {
+          console.log('No user found');
+          setUser(null);
+        }
+      } catch (fetchError) {
+        clearTimeout(timeoutId);
+        console.log('Session fetch error:', fetchError);
+        setUser(null);
       }
     } catch (error) {
-      console.error('Error checking session:', error)
-      setUser(null)
+      console.error('Error in checkSession:', error);
+      setUser(null);
     } finally {
-      setIsLoading(false)
+      console.log('Setting isLoading to false');
+      setIsLoading(false);
     }
-  }
+  };
 
   const refreshSession = async () => {
     await checkSession()

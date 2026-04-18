@@ -9,6 +9,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from "react-native";
 import { router } from "expo-router";
 import { useAuth } from "~/contexts/AuthContext";
@@ -70,25 +71,20 @@ export default function CadastroScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <View style={{ alignItems: "center", marginBottom: 36 }}>
-          <View
+          <Image
+            source={require('~/assets/logo.png')}
             style={{
               width: 84,
               height: 84,
-              borderRadius: 24,
-              backgroundColor: "#3b82f6",
-              justifyContent: "center",
-              alignItems: "center",
               marginBottom: 16,
             }}
-          >
-            <Text style={{ fontSize: 34, color: "white" }}>🐦</Text>
-          </View>
+          />
 
           <Text
             style={{
               fontSize: 34,
               fontWeight: "bold",
-              color: "#667085",
+              color: "#ADD8E6",
               marginBottom: 8,
             }}
           >
