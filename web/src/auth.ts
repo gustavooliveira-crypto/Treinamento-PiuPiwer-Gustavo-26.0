@@ -7,7 +7,7 @@ import { customSession } from "better-auth/plugins";
 import { getUserRole } from "@/backend/services/auth";
 import { expo } from "@better-auth/expo";
 // import { sendEmail } from "./lib/email";
-import { ResetPasswordEmail } from "./templates/ResetPasswordEmail";
+// import { ResetPasswordEmail } from "./templates/ResetPasswordEmail";
  
 export const auth = betterAuth({
     baseURL: process.env.BETTER_AUTH_URL || "http://localhost:3000",
@@ -65,5 +65,9 @@ export const auth = betterAuth({
     trustedOrigins: [
         "noctiluz://",
         "noctiluz://*",
+        "https://piupiuwer-monorepo-web.vercel.app",
+        "http://localhost:3000",
+        "http://localhost:3002",
+        "http://192.168.1.0/24", // para testar em rede local
     ]
 });
