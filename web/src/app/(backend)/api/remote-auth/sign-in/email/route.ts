@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const DEFAULT_REMOTE =
-  "https://piupiuwer-monorepo-web.vercel.app";
+  process.env.REMOTE_AUTH_URL ||
+  "https://treinamento-piu-piwer-gustavo-26-0.vercel.app";
 
 export async function POST(request: NextRequest) {
-  const base = DEFAULT_REMOTE;
-  const upstreamUrl = `${base}/api/auth/sign-in/email`;
+  const upstreamUrl = `${DEFAULT_REMOTE}/api/auth/sign-in/email`;
 
   const body = await request.text();
 

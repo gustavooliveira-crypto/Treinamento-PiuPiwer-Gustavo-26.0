@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const DEFAULT_REMOTE =
-  "https://piupiuwer-monorepo-web.vercel.app";
+  "https://treinamento-piu-piwer-gustavo-26-0.vercel.app";
 
 export async function POST(request: NextRequest) {
   const base = DEFAULT_REMOTE;

@@ -71,6 +71,7 @@ export async function POST(request: NextRequest) {
       { status: 201 }
     );
   } catch (error) {
+    console.log(error);
     if (error instanceof NextResponse) {
       return error;
     }
